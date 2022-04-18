@@ -3,10 +3,130 @@
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
       <mat-icon>menu</mat-icon>
     </button>
-    <span></span>
+    <span>{{ 'global.title' | transloco }}</span>
     <span class="example-spacer"></span>
     <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon>account_circle</mat-icon>
     </button>
   </mat-toolbar>
 </p>
+
+<div fxLayout="row" fxLayoutAlign="center center">
+
+  <mat-card class="wd-80">
+
+    <mat-card-title>Calcular Precio de Venta</mat-card-title>
+
+    <form [formGroup]="form" (ngSubmit)="calculate()" novalidate
+          class="wd-100 mat-card-content"
+          fxLayout="column" fxLayoutGap="4px">
+      <mat-progress-bar *ngIf="loading" color="accent" mode="indeterminate">
+      </mat-progress-bar>
+
+
+      <mat-form-field fxFlex="100"
+                      fxFlex.xs="auto"
+                      class="mg-bot-8"
+                      appearance="outline"
+                      color="primary">
+        <mat-label>País:</mat-label>
+        <mat-select formControlName="country">
+          <mat-option *ngFor="let c of countries" [value]="c">
+            {{c}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div fxLayout="row" fxLayoutGap="4px">
+
+        <mat-form-field fxFlex="50"
+                        fxFlex.xs="auto"
+                        appearance="outline"
+                        floatLabel="always"
+                        color="primary">
+          <mat-label>Nombre del producto</mat-label>
+          <input matInput
+                 formControlName="name"
+                 placeholder="Ingrese Nombre..."
+                 autocomplete="off"
+                 type="text">
+          <mat-error>Campo requerido</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="50"
+                        fxFlex.xs="auto"
+                        appearance="outline"
+                        floatLabel="always"
+                        color="primary">
+          <mat-label>Precio Base</mat-label>
+          <input matInput
+                 formControlName="priceBase"
+                 placeholder="Ingrese Precio..."
+                 autocomplete="off"
+                 type="number">
+          <mat-error>Campo requerido</mat-error>
+        </mat-form-field>
+
+      </div>
+
+      <mat-form-field *ngIf="form.value.country=='Peru'"
+                      fxFlex="100"
+                      fxFlex.xs="auto"
+                      class="mg-bot-8"
+                      appearance="outline"
+                      color="primary">
+        <mat-label>Región de Venta:</mat-label>
+        <mat-select formControlName="region">
+          <mat-option *ngFor="let s of salesRegion"
+                      [value]="s">
+            {{s}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div *ngIf="form.value.country=='Brazil'" fxLayout="row" fxLayoutGap="4px">
+
+        <mat-form-field fxFlex="50"
+                        fxFlex.xs="auto"
+                        appearance="outline"
+                        floatLabel="always"
+                        color="primary">
+          <mat-label>Estado de Fabricación</mat-label>
+          <mat-select formControlName="stateOrigin">
+            <mat-option *ngFor="let s of states"
+                        [value]="s.state_name">
+              {{s.state_name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>Campo requerido</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="50"
+                        fxFlex.xs="auto"
+                        appearance="outline"
+                        floatLabel="always"
+                        color="primary">
+          <mat-label>Estado de Venta</mat-label>
+          <mat-select formControlName="stateSale">
+            <mat-option *ngFor="let s of states"
+                        [value]="s.state_name">
+              {{s.state_name}}
+            </mat-option>
+          </mat-select>
+          <mat-error>Campo requerido</mat-error>
+        </mat-form-field>
+
+      </div>
+
+      <button mat-raised-button color="primary" type="submit">Calcular</button>
+    </form>
+
+    <div fxLayout="row" fxLayoutAlign="center center" class="price" *ngIf="price!=''">
+      <span>{{ 'global.salesPrice' | transloco }}: </span>
+      {{ price | currency: form.value.country=='Brazil'?"BRL":"S/ ":"symbol" }}
+    </div>
+
+  </mat-card>
+
+
+</div>
